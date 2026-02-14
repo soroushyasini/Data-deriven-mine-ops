@@ -122,7 +122,7 @@ class LabSample(Base):
     below_detection_limit = Column(Boolean, default=False)
     
     # Parsed sample code fields
-    sample_type = Column(String(10))  # K, L, T, CR, RC
+    sample_type = Column(String(50))  # K, L, T, CR, RC - widened from 10 to 50
     date = Column(String(10))  # Jalali date YYYY/MM/DD
     year = Column(String(4))
     month = Column(String(2))

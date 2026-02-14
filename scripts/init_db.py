@@ -18,8 +18,16 @@ def main():
     """Initialize database and load initial configuration."""
     print("Initializing database...")
     
-    # Initialize database (create tables)
+    # Initialize database (drop and recreate tables to apply schema changes)
     db = init_database()
+    
+    # Drop all existing tables and recreate them
+    # WARNING: This is for DEVELOPMENT ONLY and will delete all data!
+    # In production, use proper database migration tools like Alembic
+    print("Dropping existing tables (DEVELOPMENT MODE)...")
+    db.drop_tables()
+    print("Creating tables with updated schema...")
+    db.create_tables()
     print("✓ Database tables created")
     
     # Load configuration data
