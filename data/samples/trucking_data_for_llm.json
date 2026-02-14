@@ -1,0 +1,35 @@
+[
+  {
+    "row_number": 1,
+    "date": "1404/10/14",
+    "truck_number": "14978",
+    "receipt_number": "RCP-001",
+    "tonnage_kg": 25000,
+    "destination": "رباط سفید",
+    "cost_per_ton": 7000000,
+    "driver_name": "محمد احمدآبادی",
+    "notes": ""
+  },
+  {
+    "row_number": 2,
+    "date": "1404/10/14",
+    "truck_number": "14979",
+    "receipt_number": "RCP-002",
+    "tonnage_kg": 28000,
+    "destination": "شن بتن مشهد",
+    "cost_per_ton": 8500000,
+    "driver_name": "محمدرضا احمد آبادی",
+    "notes": ""
+  },
+  {
+    "row_number": 3,
+    "date": "1404/10/15",
+    "truck_number": "14978",
+    "receipt_number": "RCP-003",
+    "tonnage_kg": 26500,
+    "destination": "شهرک کاویان",
+    "cost_per_ton": 8500000,
+    "driver_name": "کریم ابادی",
+    "notes": ""
+  }
+]

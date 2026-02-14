@@ -1,0 +1,27 @@
+{
+  "K": {
+    "name_fa": "ورودی خاک بونکر",
+    "name_en": "Bunker Ore Input",
+    "description": "Solid feed entering factory from grinding facilities"
+  },
+  "L": {
+    "name_fa": "محلول",
+    "name_en": "Solution/Leachate",
+    "description": "Liquid from leaching process"
+  },
+  "T": {
+    "name_fa": "باطله",
+    "name_en": "Tailings",
+    "description": "Process waste stream"
+  },
+  "CR": {
+    "name_fa": "کربن",
+    "name_en": "Activated Carbon",
+    "description": "Gold-loaded carbon"
+  },
+  "RC": {
+    "name_fa": "محلول آب برگشتی",
+    "name_en": "Return Water",
+    "description": "Recycled process water"
+  }
+}

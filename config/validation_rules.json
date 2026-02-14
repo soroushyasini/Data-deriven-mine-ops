@@ -1,0 +1,29 @@
+{
+  "ore_input": {
+    "warning_threshold_ppm": 5.0,
+    "critical_threshold_ppm": 20.0,
+    "description": "High grade ore verification required"
+  },
+  "tailings": {
+    "critical_threshold_ppm": 0.2,
+    "description": "Gold loss too high - process inefficiency"
+  },
+  "return_water": {
+    "critical_threshold_ppm": 0.05,
+    "description": "Circuit leak detected"
+  },
+  "carbon": {
+    "warning_threshold_ppm": 200.0,
+    "description": "Carbon may be exhausted (below threshold)"
+  },
+  "tonnage": {
+    "min_warning_kg": 15000,
+    "max_warning_kg": 32000,
+    "description": "Unusual load size"
+  },
+  "data_quality": {
+    "missing_receipt": "warning",
+    "unknown_driver": "warning",
+    "invalid_sample_code": "critical"
+  }
+}

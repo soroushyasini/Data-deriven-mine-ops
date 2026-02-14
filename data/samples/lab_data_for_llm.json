@@ -1,0 +1,36 @@
+{
+  "Solutions": [
+    {
+      "sample_code": "A 1404 10 14 L1",
+      "au_ppm": 0.285
+    },
+    {
+      "sample_code": "B 1404 10 14 L1",
+      "au_ppm": 0.312
+    }
+  ],
+  "Solids": [
+    {
+      "sample_code": "A 1404 10 14 K1",
+      "au_ppm": 1.234
+    },
+    {
+      "sample_code": "A 1404 10 14 T1",
+      "au_ppm": 0.087
+    },
+    {
+      "sample_code": "C 1404 10 15 K1",
+      "au_ppm": 2.156
+    },
+    {
+      "sample_code": "C 1404 10 15 T1",
+      "au_ppm": 0.125
+    }
+  ],
+  "Carbon": [
+    {
+      "sample_code": "A 1404 10 14 CR1",
+      "au_ppm": 425.5
+    }
+  ]
+}
