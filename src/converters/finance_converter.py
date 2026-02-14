@@ -2,7 +2,7 @@
 Finance converter - handles financial records and driver payment tracking.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from pathlib import Path
 import sys
 

@@ -3,7 +3,7 @@ Trucking converter - converts mine to grinding facility truck shipment data.
 Handles driver name canonicalization and cost calculation fixes.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from pathlib import Path
 import sys
 
