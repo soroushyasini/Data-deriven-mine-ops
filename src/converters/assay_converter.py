@@ -145,7 +145,9 @@ class AssayConverter(BaseConverter):
         """
         Parse sample code to extract metadata.
         
-        Format: C 1404 10 14 K2
+        Formats supported:
+        - Spaced: C 1404 10 14 K2
+        - Concatenated: A1404105L, C14041014K, RC14041010, 14041017CR3
         
         Args:
             sample_code: Sample code string
@@ -164,36 +166,71 @@ class AssayConverter(BaseConverter):
             return {
                 "facility": None,
                 "date": None,
-                "sample_type": sample_code,
-                "is_special": True
+                "sample_type": sample_code[:50],
+                "is_special": True,
+                "year": "",
+                "month": "",
+                "day": "",
+                "sample_number": ""
             }
         
-        # Standard pattern: Letter Space Year Space Month Space Day Space Type+Number
-        # Fixed regex to properly capture sample type suffix
-        pattern = r'^([A-C])\s+(\d{4})\s+(\d{1,2})\s+(\d{1,2})\s+([A-Z]{1,2})(\d*)$'
-        match = re.match(pattern, sample_code)
+        # Try spaced pattern first (backward compatibility)
+        pattern_spaced = r'^([A-C])\s+(\d{4})\s+(\d{1,2})\s+(\d{1,2})\s+([A-Z]{1,2})(\d*)$'
+        match = re.match(pattern_spaced, sample_code)
         
-        if not match:
+        if match:
+            facility, year, month, day, sample_type, sample_num = match.groups()
+            date_str = f"{year}/{month.zfill(2)}/{day.zfill(2)}"
+            
             return {
-                "sample_type": sample_code,
-                "is_special": False,
-                "parse_error": True
+                "facility": facility,
+                "year": year,
+                "month": month.zfill(2),
+                "day": day.zfill(2),
+                "date": date_str,
+                "sample_type": sample_type[:50],
+                "sample_number": sample_num if sample_num else "",
+                "is_special": False
             }
         
-        facility, year, month, day, sample_type, sample_num = match.groups()
+        # Try concatenated pattern: optional prefix letters + 1404 + month(2 digits) + day(1-2 digits) + optional suffix
+        pattern_concat = r'^([A-Z]{0,2}?)(\d{4})(\d{2})(\d{1,2})([A-Z]+\d*)?$'
+        match = re.match(pattern_concat, sample_code)
         
-        # Normalize date
-        date_str = f"{year}/{month.zfill(2)}/{day.zfill(2)}"
+        if match:
+            prefix, year, month, day, suffix = match.groups()
+            suffix = suffix or ""
+            
+            # Determine sample type from suffix
+            sample_type = suffix if suffix else "unknown"
+            
+            # Determine facility from prefix
+            facility = prefix if prefix in ("A", "B", "C") else None
+            
+            # Normalize date
+            date_str = f"{year}/{month}/{day.zfill(2)}"
+            
+            return {
+                "facility": facility,
+                "prefix": prefix,
+                "year": year,
+                "month": month,
+                "day": day.zfill(2),
+                "date": date_str,
+                "sample_type": sample_type[:50],
+                "sample_number": "",
+                "is_special": False
+            }
         
+        # Fallback - couldn't parse
         return {
-            "facility": facility,
-            "year": year,
-            "month": month.zfill(2),
-            "day": day.zfill(2),
-            "date": date_str,
-            "sample_type": sample_type,
-            "sample_number": sample_num if sample_num else "",
-            "is_special": False
+            "sample_type": sample_code[:50],
+            "is_special": False,
+            "parse_error": True,
+            "year": "",
+            "month": "",
+            "day": "",
+            "sample_number": ""
         }
     
     @staticmethod

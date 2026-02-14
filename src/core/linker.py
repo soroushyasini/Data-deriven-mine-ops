@@ -16,13 +16,15 @@ class SampleCodeParser:
         """
         Parse sample code to extract facility, date, and sample type.
         
-        Format: C 1404 10 14 K2
-                │  │    │  │  │
-                │  │    │  │  └─ Sample type + number
-                │  │    │  └──── Day
-                │  │    └─────── Month
-                │  └──────────── Year (Jalali)
-                └─────────────── Facility (A/B/C)
+        Formats supported:
+        - Spaced: C 1404 10 14 K2
+                  │  │    │  │  │
+                  │  │    │  │  └─ Sample type + number
+                  │  │    │  └──── Day
+                  │  │    └─────── Month
+                  │  └──────────── Year (Jalali)
+                  └─────────────── Facility (A/B/C)
+        - Concatenated: A1404105L, C14041014K, RC14041010, 14041017CR3
         
         Args:
             sample_code: Sample code string
@@ -33,6 +35,8 @@ class SampleCodeParser:
         if not sample_code:
             return None
         
+        sample_code = sample_code.strip()
+        
         # Special codes
         special_codes = {
             "F2(T3)": {"facility": None, "date": None, "sample_type": "F", "is_special": True},
@@ -41,28 +45,56 @@ class SampleCodeParser:
         if sample_code in special_codes:
             return special_codes[sample_code]
         
-        # Standard pattern: Letter Space Year Space Month Space Day Space Type+Number
-        pattern = r'^([A-C])\s+(\d{4})\s+(\d{1,2})\s+(\d{1,2})\s+([A-Z]{1,2})(\d*)$'
-        match = re.match(pattern, sample_code)
+        # Try spaced pattern first (backward compatibility)
+        pattern_spaced = r'^([A-C])\s+(\d{4})\s+(\d{1,2})\s+(\d{1,2})\s+([A-Z]{1,2})(\d*)$'
+        match = re.match(pattern_spaced, sample_code)
         
-        if not match:
-            return None
+        if match:
+            facility, year, month, day, sample_type, sample_num = match.groups()
+            date_str = f"{year}/{month.zfill(2)}/{day.zfill(2)}"
+            
+            return {
+                "facility": facility,
+                "year": year,
+                "month": month.zfill(2),
+                "day": day.zfill(2),
+                "date": date_str,
+                "sample_type": sample_type,
+                "sample_number": sample_num if sample_num else None,
+                "is_special": False
+            }
         
-        facility, year, month, day, sample_type, sample_num = match.groups()
+        # Try concatenated pattern: optional prefix letters + 1404 + month(2 digits) + day(1-2 digits) + optional suffix
+        pattern_concat = r'^([A-Z]{0,2}?)(\d{4})(\d{2})(\d{1,2})([A-Z]+\d*)?$'
+        match = re.match(pattern_concat, sample_code)
         
-        # Normalize date to YYYY/MM/DD format
-        date_str = f"{year}/{month.zfill(2)}/{day.zfill(2)}"
+        if match:
+            prefix, year, month, day, suffix = match.groups()
+            suffix = suffix or ""
+            
+            # Determine sample type from suffix
+            sample_type = suffix if suffix else "unknown"
+            
+            # Determine facility from prefix
+            facility = prefix if prefix in ("A", "B", "C") else None
+            
+            # Normalize date
+            date_str = f"{year}/{month}/{day.zfill(2)}"
+            
+            return {
+                "facility": facility,
+                "prefix": prefix,
+                "year": year,
+                "month": month,
+                "day": day.zfill(2),
+                "date": date_str,
+                "sample_type": sample_type,
+                "sample_number": None,
+                "is_special": False
+            }
         
-        return {
-            "facility": facility,
-            "year": year,
-            "month": month.zfill(2),
-            "day": day.zfill(2),
-            "date": date_str,
-            "sample_type": sample_type,
-            "sample_number": sample_num if sample_num else None,
-            "is_special": False
-        }
+        # Fallback - couldn't parse
+        return None
 
 
 class DataLinker:
