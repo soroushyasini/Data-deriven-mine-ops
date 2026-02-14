@@ -153,7 +153,7 @@ class TestLabSampleDuplicateHandling:
                 'sample_number': '2'
             },
             {
-                'sample_code': 'B1404101L',
+                'sample_code': 'A1404103L',
                 'sheet_name': 'Solutions',
                 'au_ppm': 0.3,
                 'facility_code': 'A',
@@ -162,7 +162,7 @@ class TestLabSampleDuplicateHandling:
                 'year': '1404',
                 'month': '10',
                 'day': '01',
-                'sample_number': '1'
+                'sample_number': '3'
             }
         ]
         
