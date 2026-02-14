@@ -4,7 +4,7 @@ Database models for PostgreSQL storage using SQLAlchemy ORM.
 
 from datetime import datetime
 from sqlalchemy import (
-    Column, Integer, String, Float, Boolean, DateTime, JSON, ForeignKey, Text, Date
+    Column, Integer, String, Float, Boolean, DateTime, JSON, ForeignKey, Text, Date, UniqueConstraint
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -113,7 +113,7 @@ class LabSample(Base):
     __tablename__ = 'lab_samples'
     
     id = Column(Integer, primary_key=True)
-    sample_code = Column(String(50), unique=True, nullable=False)
+    sample_code = Column(String(50), nullable=False, index=True)
     sheet_name = Column(String(100))
     
     # Gold content
@@ -137,6 +137,11 @@ class LabSample(Base):
     facility = relationship("Facility", back_populates="lab_samples")
     
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Composite unique constraint to prevent exact duplicates within the same sheet
+    __table_args__ = (
+        UniqueConstraint('sample_code', 'sheet_name', name='uq_sample_sheet'),
+    )
 
 
 class TransportCost(Base):

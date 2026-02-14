@@ -212,12 +212,18 @@ class DataIngestion:
         
         with self.db.get_session() as session:
             for sample_data in samples:
-                # Check if sample already exists
                 sample_code = sample_data.get('sample_code', '')
-                existing = session.query(LabSample).filter_by(sample_code=sample_code).first()
+                sheet_name = sample_data.get('sheet_name', '')
+                
+                # Check if sample already exists with the same code and sheet
+                existing = session.query(LabSample).filter_by(
+                    sample_code=sample_code,
+                    sheet_name=sheet_name
+                ).first()
                 
                 if existing:
-                    continue  # Skip duplicates
+                    # Skip duplicate (same sample code in the same sheet)
+                    continue
                 
                 # Get facility
                 facility_code = sample_data.get('facility_code')
@@ -228,7 +234,7 @@ class DataIngestion:
                 # Create sample
                 sample = LabSample(
                     sample_code=sample_code,
-                    sheet_name=sample_data.get('sheet_name', ''),
+                    sheet_name=sheet_name,
                     au_ppm=sample_data.get('au_ppm'),
                     au_detected=sample_data.get('au_detected', True),
                     below_detection_limit=sample_data.get('below_detection_limit', False),
