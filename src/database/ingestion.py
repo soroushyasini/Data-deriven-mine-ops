@@ -216,6 +216,7 @@ class DataIngestion:
                 sheet_name = sample_data.get('sheet_name', '')
                 
                 # Check if sample already exists with the same code and sheet
+                # This checks both existing DB records and pending inserts in the current session
                 existing = session.query(LabSample).filter_by(
                     sample_code=sample_code,
                     sheet_name=sheet_name
@@ -248,6 +249,8 @@ class DataIngestion:
                     facility_id=facility.id if facility else None
                 )
                 session.add(sample)
+                # Flush to make this sample visible to subsequent queries in the same transaction
+                session.flush()
                 count += 1
         
         return count
