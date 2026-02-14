@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: mining_ops_db
+    environment:
+      POSTGRES_DB: mining_ops
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mining_ops_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Python Pipeline
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mining_ops_pipeline
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/mining_ops
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      EMAIL_TO: ${EMAIL_TO:-}
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - ./reports_output:/app/reports_output
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mining_ops_network
+    command: tail -f /dev/null  # Keep container running
+
+  # Metabase Dashboard
+  metabase:
+    image: metabase/metabase:latest
+    container_name: mining_ops_metabase
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: postgres
+      MB_DB_PASS: postgres
+      MB_DB_HOST: postgres
+    ports:
+      - "3000:3000"
+    volumes:
+      - metabase_data:/metabase-data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mining_ops_network
+
+volumes:
+  postgres_data:
+  metabase_data:
+
+networks:
+  mining_ops_network:
+    driver: bridge
