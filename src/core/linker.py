@@ -64,23 +64,33 @@ class SampleCodeParser:
                 "is_special": False
             }
         
-        # Try concatenated pattern: optional prefix letters + 1404 + month(2 digits) + day(1-2 digits) + optional suffix
-        pattern_concat = r'^([A-Z]{0,2}?)(\d{4})(\d{2})(\d{1,2})([A-Z]+\d*)?$'
-        match = re.match(pattern_concat, sample_code)
+        # Try concatenated patterns in order of specificity
         
+        # Pattern 1: Letter+digit prefix (T1, F2, etc.) + date (no suffix expected)
+        pattern1 = r'^([A-Z]\d)(\d{4})(\d{2})(\d{1,2})$'
+        match = re.match(pattern1, sample_code)
         if match:
-            prefix, year, month, day, suffix = match.groups()
-            suffix = suffix or ""
-            
-            # Determine sample type from suffix
-            sample_type = suffix if suffix else "unknown"
-            
-            # Determine facility from prefix
-            facility = prefix if prefix in ("A", "B", "C") else None
-            
-            # Normalize date
+            prefix, year, month, day = match.groups()
             date_str = f"{year}/{month}/{day.zfill(2)}"
-            
+            return {
+                "facility": None,
+                "prefix": prefix,
+                "year": year,
+                "month": month,
+                "day": day.zfill(2),
+                "date": date_str,
+                "sample_type": "unknown",
+                "sample_number": None,
+                "is_special": False
+            }
+        
+        # Pattern 2: Two-letter prefix (RC, LC, etc.) + date (no suffix expected)
+        pattern2 = r'^([A-Z]{2})(\d{4})(\d{2})(\d{1,2})$'
+        match = re.match(pattern2, sample_code)
+        if match:
+            prefix, year, month, day = match.groups()
+            facility = prefix if prefix in ("A", "B", "C") else None
+            date_str = f"{year}/{month}/{day.zfill(2)}"
             return {
                 "facility": facility,
                 "prefix": prefix,
@@ -88,7 +98,43 @@ class SampleCodeParser:
                 "month": month,
                 "day": day.zfill(2),
                 "date": date_str,
-                "sample_type": sample_type,
+                "sample_type": "unknown",
+                "sample_number": None,
+                "is_special": False
+            }
+        
+        # Pattern 3: Single letter prefix + date + suffix
+        pattern3 = r'^([A-Z])(\d{4})(\d{2})(\d{1,2})([A-Z]+\d*)$'
+        match = re.match(pattern3, sample_code)
+        if match:
+            prefix, year, month, day, suffix = match.groups()
+            facility = prefix if prefix in ("A", "B", "C") else None
+            date_str = f"{year}/{month}/{day.zfill(2)}"
+            return {
+                "facility": facility,
+                "prefix": prefix,
+                "year": year,
+                "month": month,
+                "day": day.zfill(2),
+                "date": date_str,
+                "sample_type": suffix,
+                "sample_number": None,
+                "is_special": False
+            }
+        
+        # Pattern 4: No prefix + date + suffix
+        pattern4 = r'^(\d{4})(\d{2})(\d{1,2})([A-Z]+\d*)$'
+        match = re.match(pattern4, sample_code)
+        if match:
+            year, month, day, suffix = match.groups()
+            date_str = f"{year}/{month}/{day.zfill(2)}"
+            return {
+                "facility": None,
+                "year": year,
+                "month": month,
+                "day": day.zfill(2),
+                "date": date_str,
+                "sample_type": suffix,
                 "sample_number": None,
                 "is_special": False
             }
