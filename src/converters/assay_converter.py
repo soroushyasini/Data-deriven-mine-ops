@@ -208,7 +208,7 @@ class AssayConverter(BaseConverter):
                 "month": month,
                 "day": day.zfill(2),
                 "date": date_str,
-                "sample_type": "unknown",
+                "sample_type": "",  # No suffix in this pattern
                 "sample_number": "",
                 "is_special": False
             }
@@ -227,7 +227,7 @@ class AssayConverter(BaseConverter):
                 "month": month,
                 "day": day.zfill(2),
                 "date": date_str,
-                "sample_type": "unknown",
+                "sample_type": "",  # No suffix in this pattern
                 "sample_number": "",
                 "is_special": False
             }

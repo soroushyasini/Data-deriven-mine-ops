@@ -79,7 +79,7 @@ class SampleCodeParser:
                 "month": month,
                 "day": day.zfill(2),
                 "date": date_str,
-                "sample_type": "unknown",
+                "sample_type": "",  # No suffix in this pattern
                 "sample_number": None,
                 "is_special": False
             }
@@ -98,7 +98,7 @@ class SampleCodeParser:
                 "month": month,
                 "day": day.zfill(2),
                 "date": date_str,
-                "sample_type": "unknown",
+                "sample_type": "",  # No suffix in this pattern
                 "sample_number": None,
                 "is_special": False
             }
