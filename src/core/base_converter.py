@@ -174,6 +174,8 @@ class BaseConverter:
         Returns:
             True if row appears to be a summary row
         """
+        if not isinstance(row_data, dict):
+            return False
         for value in row_data.values():
             if isinstance(value, str) and "جمع" in value:
                 return True
@@ -190,6 +192,8 @@ class BaseConverter:
         Returns:
             True if all values are None or empty strings
         """
+        if not isinstance(row_data, dict):
+            return row_data is None
         for value in row_data.values():
             if value is not None and str(value).strip() != "":
                 return False

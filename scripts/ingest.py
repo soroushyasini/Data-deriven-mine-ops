@@ -37,6 +37,34 @@ def save_json_file(filepath: Path, data: Any):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def extract_sheets(raw_data):
+    """Extract sheet data from nested JSON format produced by conversion scripts.
+    
+    Returns:
+        - For files with multiple sheets: dict of {sheet_name: [records]}
+        - For files with single sheet: just the [records] list
+        - For already-flat format: return as-is
+    """
+    # Handle nested format with sheets array
+    if isinstance(raw_data, dict) and "sheets" in raw_data and isinstance(raw_data["sheets"], list):
+        result = {}
+        for sheet in raw_data["sheets"]:
+            if isinstance(sheet, dict):
+                name = sheet.get("sheet_name", "")
+                data = sheet.get("data", [])
+                if name and isinstance(data, list):
+                    result[name] = data
+        
+        # If only one sheet, return just the data list (for trucking converter)
+        if len(result) == 1:
+            return list(result.values())[0]
+        
+        return result if result else raw_data
+    
+    # If already flat format, return as-is
+    return raw_data
+
+
 def main():
     """Run full ingestion pipeline."""
     print("=" * 60)
@@ -87,6 +115,7 @@ def main():
     if bunker_file.exists():
         print(f"\n3. Processing bunker data from {bunker_file}...")
         input_data = load_json_file(bunker_file)
+        input_data = extract_sheets(input_data)
         results['bunker_loads'] = bunker_converter.convert(input_data)
         
         output_file = processed_dir / "bunker_loads_standardized.json"
@@ -101,6 +130,7 @@ def main():
     if lab_file.exists():
         print(f"\n4. Processing lab data from {lab_file}...")
         input_data = load_json_file(lab_file)
+        input_data = extract_sheets(input_data)
         results['lab_samples'] = assay_converter.convert(input_data)
         
         output_file = processed_dir / "lab_samples_standardized.json"
@@ -116,6 +146,7 @@ def main():
     if trucking_file.exists():
         print(f"\n5. Processing trucking data from {trucking_file}...")
         input_data = load_json_file(trucking_file)
+        input_data = extract_sheets(input_data)
         results['truck_shipments'] = trucking_converter.convert(input_data)
         
         output_file = processed_dir / "truck_shipments_standardized.json"
