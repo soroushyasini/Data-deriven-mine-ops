@@ -1,0 +1,20 @@
+{
+  "A": {
+    "name_fa": "حجازیان",
+    "name_en": "Hejazian",
+    "bunker_sheet": "رباط سفید",
+    "truck_dest": "رباط سفید"
+  },
+  "B": {
+    "name_fa": "شن بتن",
+    "name_en": "Shen Beton",
+    "bunker_sheet": "شن بتن",
+    "truck_dest": "شن بتن مشهد"
+  },
+  "C": {
+    "name_fa": "کاویان",
+    "name_en": "Kavian",
+    "bunker_sheet": "مس کاویان",
+    "truck_dest": "شهرک کاویان"
+  }
+}
