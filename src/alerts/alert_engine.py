@@ -105,6 +105,11 @@ class AlertEngine:
         # Send all alerts
         self.send_alerts(all_alerts)
         
+        # Send summary for notifiers that support it
+        for notifier in self.notifiers:
+            if hasattr(notifier, 'send_summary'):
+                notifier.send_summary()
+        
         # Generate summary
         summary = {
             "total_alerts": len(all_alerts),
