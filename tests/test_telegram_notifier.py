@@ -162,3 +162,28 @@ class TestTelegramNotifier:
         
         # Buffer should still be cleared
         assert len(notifier.alerts_buffer) == 0
+    
+    @patch('src.alerts.telegram_notifier.requests.post')
+    def test_send_summary_handles_http_errors(self, mock_post):
+        """Test that send_summary handles HTTP-level errors (non-200 status codes)."""
+        mock_response = Mock()
+        mock_response.status_code = 400
+        mock_response.text = "Bad Request: invalid chat_id"
+        mock_post.return_value = mock_response
+        
+        notifier = TelegramNotifier(bot_token="test_token", chat_id="test_chat_id")
+        notifier.send_alert(ValidationAlert(
+            level=AlertLevel.CRITICAL,
+            rule="test_rule",
+            message="Test alert",
+            data={}
+        ))
+        
+        # Should not raise exception
+        notifier.send_summary()
+        
+        # Verify HTTP call was made
+        assert mock_post.called
+        
+        # Buffer should still be cleared even with error
+        assert len(notifier.alerts_buffer) == 0

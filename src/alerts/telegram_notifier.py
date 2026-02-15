@@ -90,22 +90,3 @@ class TelegramNotifier:
                 print(f"Warning: Telegram API returned status {response.status_code}: {response.text}")
         except Exception as e:
             print(f"Warning: Failed to send Telegram message: {e}")
-    
-    @staticmethod
-    def _get_emoji(level: AlertLevel) -> str:
-        if level == AlertLevel.CRITICAL:
-            return "🚨"
-        elif level == AlertLevel.WARNING:
-            return "⚠️"
-        return "ℹ️"
-    
-    @staticmethod
-    def _format_message(alert: ValidationAlert, emoji: str) -> str:
-        message = f"{emoji} *{alert.level.value.upper()}*\n\n"
-        message += f"*Rule:* {alert.rule}\n"
-        message += f"*Message:* {alert.message}\n"
-        if alert.data:
-            message += "\n*Details:*\n"
-            for key, value in alert.data.items():
-                message += f"• {key}: {value}\n"
-        return message
