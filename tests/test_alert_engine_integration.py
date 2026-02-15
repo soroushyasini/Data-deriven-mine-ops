@@ -60,9 +60,6 @@ class TestAlertEngineIntegration:
         # Create a mock notifier without send_summary
         mock_notifier = Mock()
         mock_notifier.send_alert = Mock()
-        # Explicitly remove send_summary if it exists
-        if hasattr(mock_notifier, 'send_summary'):
-            delattr(mock_notifier, 'send_summary')
         
         # Initialize alert engine
         engine = AlertEngine()
