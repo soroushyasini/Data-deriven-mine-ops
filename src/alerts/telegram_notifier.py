@@ -88,7 +88,7 @@ class TelegramNotifier:
                 print("✓ Telegram summary sent successfully")
             else:
                 print(f"Warning: Telegram API returned status {response.status_code}: {response.text}")
-        except requests.exceptions.RequestException as e:
+        except Exception as e:
             print(f"Warning: Failed to send Telegram message: {e}")
     
     @staticmethod
