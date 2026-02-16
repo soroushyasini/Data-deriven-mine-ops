@@ -1,0 +1,16 @@
+graph LR
+    subgraph DOCKER["Docker Compose Stack"]
+        direction TB
+        D1["🐍 Python Pipeline<br/>──────────<br/>• Excel ingestion<br/>• Validation<br/>• Data linking<br/>• Report generation<br/>• Alert engine"]
+
+        D2["🐘 PostgreSQL<br/>──────────<br/>• All operational data<br/>• Historical records<br/>• Registries"]
+
+        D3["📊 Metabase<br/>──────────<br/>• Interactive dashboards<br/>• Manager self-service<br/>• Export to PDF"]
+
+        D1 --> D2
+        D2 --> D3
+    end
+
+    E1["📁 Excel Files<br/>(dropped in folder)"] --> D1
+    D3 --> U1["👔 Manager<br/>Views dashboard"]
+    D1 --> U2["📧 Alerts<br/>(Email/Telegram)"]

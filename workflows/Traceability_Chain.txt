@@ -1,0 +1,9 @@
+Lab Result: C14041024K1 = 0.79 ppm Au
+    ↓ decode
+Facility: C (کاویان) | Date: 1404/10/24 | Type: K (Bunker Input Solid) | Sample #1
+    ↓ match to bunker data
+Bunker: مس کاویان sheet → 1404/10/24 → 22,800 kg (row 20)
+    ↓ match to trucking data
+Truck: Mine → شهرک کاویان on or before 1404/10/24
+    ↓ trace to mine
+Mining date & location → ore quality assessment

@@ -1,0 +1,46 @@
+Data-deriven-mine-ops/
+├── docker-compose.yml
+├── Dockerfile
+├── README.md
+├── requirements.txt
+│
+├── config/
+│   ├── facilities.json          # A, B, C mapping (extendable)
+│   ├── drivers.json             # Canonical driver names (extendable)
+│   ├── trucks.json              # Truck registry (extendable)
+│   ├── sample_types.json        # K, L, T, CR, RC definitions
+│   └── validation_rules.json    # Alert thresholds
+│
+├── src/
+│   ├── core/
+│   │   ├── base_converter.py    # Shared utilities
+│   │   ├── validator.py         # Data validation engine
+│   │   └── linker.py            # Lab↔Bunker↔Truck tracing
+│   │
+│   ├── converters/
+│   │   ├── bunker_converter.py  # From your excel_to_json_llm
+│   │   ├── assay_converter.py   # From your assay_data_for_llm
+│   │   ├── trucking_converter.py # From your trucking_data_clean
+│   │   └── finance_converter.py # NEW (phase 2)
+│   │
+│   ├── database/
+│   │   ├── models.py            # SQLAlchemy/PostgreSQL schemas
+│   │   └── ingestion.py         # JSON → DB loader
+│   │
+│   ├── reports/
+│   │   ├── daily_ops.py
+│   │   ├── grade_report.py
+│   │   ├── facility_comparison.py
+│   │   ├── finance_summary.py
+│   │   └── executive_summary.py
+│   │
+│   └── alerts/
+│       └── alert_engine.py
+│
+├── data/
+│   ├── incoming/                # Drop Excel files here
+│   ├── processed/               # Converted JSON files
+│   └── samples/                 # Your current sample data
+│
+└── metabase/
+    └── dashboards/              # Exported dashboard configs

@@ -1,0 +1,47 @@
+graph TD
+    subgraph STRATEGY["📋 INSPECTION & REPORTING STRATEGY"]
+        direction TB
+
+        subgraph LAYER1["LAYER 1: DATA STANDARDIZATION"]
+            direction LR
+            L1A["📌 Naming Convention<br/>──────────<br/>• Driver names: canonical form<br/>• Sample codes: validated pattern<br/>• Truck IDs: fixed registry<br/>• Facility codes: A, B, C"]
+            L1B["📌 Units Standardization<br/>──────────<br/>• All weights: kg<br/>• All costs: Rial<br/>• All dates: Jalali YYYY/MM/DD<br/>• Au assay: ppm"]
+            L1C["📌 Data Validation Rules<br/>──────────<br/>• Tonnage range: 10,000–35,000 kg<br/>• Au solid: flag if >5 ppm<br/>• Au tailing: alert if >0.2 ppm<br/>• Receipt number: required"]
+        end
+
+        subgraph LAYER2["LAYER 2: INSPECTION CHECKPOINTS"]
+            direction TB
+
+            L2A["🔍 CHECKPOINT 1: Mine Loading<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>What to inspect:</b><br/>• Truck ID, Driver name<br/>• Tonnage (weighed at mine)<br/>• Receipt number (mandatory)<br/>• Destination facility<br/>• Date & time<br/><b>Frequency:</b> Every load<br/><b>Report:</b> Daily mine dispatch summary"]
+
+            L2B["🔍 CHECKPOINT 2: Grinding Facility Reception<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>What to inspect:</b><br/>• Truck arrival vs dispatch time<br/>• Tonnage (weighed at facility)<br/>• Cross-check with mine dispatch<br/><b>Frequency:</b> Every load<br/><b>Report:</b> Tonnage reconciliation"]
+
+            L2C["🔍 CHECKPOINT 3: Bunker Loading<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>What to inspect:</b><br/>• Output tonnage from grinding<br/>• Facility source (A/B/C)<br/>• Driver & date<br/>• Cumulative tracking<br/><b>Frequency:</b> Per facility schedule<br/><b>Report:</b> Grinding output efficiency"]
+
+            L2D["🔍 CHECKPOINT 4: Factory Input Sampling<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>What to inspect:</b><br/>• Sample taken per bunker arrival<br/>• Correct sample labeling<br/>• Sample code follows standard<br/><b>Frequency:</b> Every bunker received<br/><b>Report:</b> Sample tracking log"]
+
+            L2E["🔍 CHECKPOINT 5: Lab Analysis<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>What to inspect:</b><br/>• K (solid input): ore grade<br/>• L (solution): leach performance<br/>• T (tailings): gold loss<br/>• CR (carbon): adsorption rate<br/>• RC (return water): circuit efficiency<br/><b>Frequency:</b> Per sample batch<br/><b>Report:</b> Daily assay report + alerts"]
+
+            L2A --> L2B --> L2C --> L2D --> L2E
+        end
+
+        subgraph LAYER3["LAYER 3: REPORTS"]
+            direction TB
+
+            L3A["📊 REPORT 1: Daily Operations Report<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>Audience:</b> Operations team<br/><b>Contains:</b><br/>• Trucks dispatched today<br/>• Tonnage per facility<br/>• Bunkers received at factory<br/>• Samples sent to lab<br/><b>Frequency:</b> Daily, automated"]
+
+            L3B["📊 REPORT 2: Lab Results & Grade Report<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>Audience:</b> Manager / Decision maker<br/><b>Contains:</b><br/>• Au grade per facility per day<br/>• Trend: is grade improving/declining?<br/>• Outlier alerts (high or low grade)<br/>• Tailings loss tracking<br/>• Carbon loading status<br/><b>Frequency:</b> Per lab batch, ~daily"]
+
+            L3C["📊 REPORT 3: Facility Comparison Report<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>Audience:</b> Manager<br/><b>Contains:</b><br/>• Side-by-side: A vs B vs C<br/>• Input tonnage vs ore grade<br/>• Cost per ton vs gold content<br/>• Which facility is most productive?<br/><b>Frequency:</b> Weekly"]
+
+            L3D["📊 REPORT 4: Financial Summary<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>Audience:</b> Accountant / Manager<br/><b>Contains:</b><br/>• Transport costs per facility<br/>• Driver payment tracking<br/>• Outstanding balances<br/>• Cost per gram of gold extracted<br/><b>Frequency:</b> Weekly / Monthly"]
+
+            L3E["📊 REPORT 5: Monthly Executive Summary<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/><b>Audience:</b> Boss / Senior management<br/><b>Contains:</b><br/>• Total ore processed<br/>• Average grade & recovery<br/>• Total gold produced (estimated)<br/>• Total cost & cost efficiency<br/>• Recommendation: where to mine next<br/><b>Frequency:</b> Monthly"]
+        end
+
+        LAYER1 --> LAYER2 --> LAYER3
+    end
+
+    style LAYER1 fill:#2d5a8c,stroke:#1a3d5c,color:#fff
+    style LAYER2 fill:#5b4a8c,stroke:#3d2d6b,color:#fff
+    style LAYER3 fill:#1a5c3a,stroke:#0d3b24,color:#fff

@@ -1,0 +1,42 @@
+graph TD
+    subgraph SOFTWARE["🖥️ Mine Operations Data Platform<br/>soroushyasini/Data-deriven-mine-ops"]
+        direction TB
+
+        subgraph M1["MODULE 1: Data Ingestion"]
+            M1A["📥 Excel → JSON Converter<br/><i>Your 3 scripts, refactored</i>"]
+            M1B["📥 Drop-in folder<br/><i>Put Excel files here,<br/>auto-converted</i>"]
+            M1C["📥 Data Validation<br/><i>Check rules on import,<br/>flag errors immediately</i>"]
+        end
+
+        subgraph M2["MODULE 2: Data Storage"]
+            M2A["🗄️ PostgreSQL Database<br/><i>All historical data,<br/>properly structured</i>"]
+            M2B["🗄️ Registries<br/><i>Drivers, Trucks, Facilities<br/>extendable for new entries</i>"]
+        end
+
+        subgraph M3["MODULE 3: Data Linking Engine"]
+            M3A["🔗 Trace: Lab → Bunker → Truck → Mine<br/><i>THE core feature:<br/>connect assay results<br/>back to mining date</i>"]
+        end
+
+        subgraph M4["MODULE 4: Reporting"]
+            M4A["📊 Daily Ops Report"]
+            M4B["📊 Grade Report per Facility"]
+            M4C["📊 Facility Comparison"]
+            M4D["📊 Finance Summary"]
+            M4E["📊 Monthly Executive Summary"]
+        end
+
+        subgraph M5["MODULE 5: Alerts"]
+            M5A["⚠️ High grade outlier detected"]
+            M5B["⚠️ Tailings gold loss too high"]
+            M5C["⚠️ Missing data / bad label"]
+            M5D["⚠️ Tonnage mismatch"]
+        end
+
+        subgraph M6["MODULE 6: Dashboard"]
+            M6A["📈 Metabase / Grafana<br/><i>Interactive charts<br/>Manager self-service</i>"]
+        end
+
+        M1 --> M2 --> M3 --> M4
+        M3 --> M5
+        M2 --> M6
+    end

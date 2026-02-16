@@ -1,0 +1,122 @@
+graph TD
+    subgraph MINE["⛏️ MINE — Single Ore Source"]
+        M1[("Ore Extraction<br/><i>Location TBD by management<br/>based on lab results</i>")]
+    end
+
+    subgraph MINE_TRUCKING["🚛 MINE → GRINDING TRANSPORT<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/>📋 trucking_data_for_llm.json<br/>108 shipments │ 2,889.58 tons<br/>9 trucks │ 10 drivers<br/>Total cost: 23.2B Rial"]
+        direction LR
+        MT1["<b>To A – رباط سفید</b><br/>47 trips │ 1,235t<br/>Cost: 6.9–7.8M/ton<br/><i>Closest facility</i>"]
+        MT2["<b>To B – شن بتن</b><br/>41 trips │ 1,128t<br/>Cost: 8.5M/ton<br/><i>Mashhad area</i>"]
+        MT3["<b>To C – کاویان</b><br/>20 trips │ 527t<br/>Cost: 8.5M/ton<br/><i>Shahrak area</i>"]
+    end
+
+    M1 --> MT1
+    M1 --> MT2
+    M1 --> MT3
+
+    subgraph GRINDING["🏭 GRINDING FACILITIES"]
+        direction LR
+        G1["<b>A – حجازیان</b><br/>رباط سفید<br/>──────────<br/>Receives: 1,235t ore<br/>Outputs: 1,523t ground<br/><b>Highest throughput</b><br/><i>Daily operations</i>"]
+        G2["<b>B – شن بتن</b><br/>Shen Beton Mashhad<br/>──────────<br/>Receives: 1,128t ore<br/>Outputs: 700t ground<br/><b>Medium throughput</b><br/><i>~3x per week</i>"]
+        G3["<b>C – کاویان</b><br/>Shahrak Kavian<br/>──────────<br/>Receives: 527t ore<br/>Outputs: 739t ground<br/><b>Burst operations</b><br/><i>Variable schedule</i>"]
+    end
+
+    MT1 --> G1
+    MT2 --> G2
+    MT3 --> G3
+
+    subgraph BUNKER_TRANSPORT["🚛 GRINDING → FACTORY TRANSPORT<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/>📋 bunker_for_llm.json<br/>121 loads │ 2,961,435 kg<br/>Cost: 320 Toman/ton<br/>💰 Finance: ad-hoc WhatsApp invoicing"]
+        direction LR
+        BT1["From A: 64 loads<br/>1,523,160 kg"]
+        BT2["From B: 28 loads<br/>699,530 kg"]
+        BT3["From C: 29 loads<br/>738,745 kg"]
+    end
+
+    G1 --> BT1
+    G2 --> BT2
+    G3 --> BT3
+
+    subgraph FACTORY["🏗️ PROCESSING FACTORY — Gold Extraction"]
+        direction TB
+        F1["📥 <b>Reception & Feed</b><br/>K = ورودی خاک بونکر<br/>──────────<br/>Avg Au: 1.5 ppm<br/>Outliers: up to 33 ppm"]
+
+        F2["⚗️ <b>Leaching Process</b><br/>(CIL/CIP)<br/>──────────<br/>Gold dissolves from ore<br/>into pregnant solution"]
+
+        F3["💧 <b>L – محلول</b><br/>Pregnant Solution<br/>──────────<br/>Avg Au: 0.305 ppm"]
+
+        F4["♻️ <b>RC – آب برگشتی</b><br/>Return Water<br/>──────────<br/>All readings: ≤0.05 ppm<br/>✅ Efficient recovery"]
+
+        F5["⚫ <b>CR – کربن</b><br/>Activated Carbon<br/>──────────<br/>Au: 365–710 ppm<br/>Gold concentrates here"]
+
+        F6["🗑️ <b>T – باطله</b><br/>Tailings<br/>──────────<br/>Avg Au: ~0.11 ppm<br/>⚠️ Monitor for loss"]
+
+        F7["🥇 <b>Gold Recovery</b><br/>Carbon stripping<br/>→ Final product"]
+
+        F1 --> F2
+        F2 --> F3
+        F2 --> F6
+        F3 --> F5
+        F3 --> F4
+        F5 --> F7
+    end
+
+    BT1 & BT2 & BT3 --> F1
+
+    subgraph SAMPLING["🧪 SAMPLING POINTS<br/>Sample Code: PREFIX + DATE + SUFFIX"]
+        S1["K samples → Ore input grade<br/><i>per facility per day</i>"]
+        S2["L samples → Solution gold content"]
+        S3["T samples → Tailings gold loss"]
+        S4["CR samples → Carbon gold loading"]
+        S5["RC samples → Return water check"]
+    end
+
+    F1 -.-> S1
+    F3 -.-> S2
+    F6 -.-> S3
+    F5 -.-> S4
+    F4 -.-> S5
+
+    subgraph LAB["🔬 LABORATORY<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/>📋 lab_data_for_llm.json<br/>126 samples │ 90.5% detection rate<br/>3 types: solutions, solids, carbon"]
+        L1["Au Assay Analysis<br/>Unit: ppm<br/>Detection limit: 0.05 ppm"]
+    end
+
+    S1 & S2 & S3 & S4 & S5 --> L1
+
+    subgraph FEEDBACK["📊 DECISION FEEDBACK LOOP"]
+        FB1["Lab results linked to<br/>facility + date"]
+        FB2["Manager sees which<br/>mining location yields<br/>better ore grade"]
+        FB3["Adjust mining location<br/>& resource allocation"]
+        FB1 --> FB2 --> FB3
+    end
+
+    L1 --> FB1
+    FB3 -.->|"Informs next extraction"| M1
+
+    subgraph FINANCE["💰 FINANCE (Currently Ad-Hoc)<br/>━━━━━━━━━━━━━━━━━━━━━━━━<br/>📋 WhatsApp messages + manual calc<br/>⚠️ Needs standardization"]
+        FN1["Mine→Grinding Transport<br/>6.9–8.5M Rial/ton"]
+        FN2["Grinding→Factory Transport<br/>320 Toman/ton"]
+        FN3["Driver Payments<br/><i>Per driver bank transfers</i>"]
+    end
+
+    MINE_TRUCKING -.-> FN1
+    BUNKER_TRANSPORT -.-> FN2
+    FN1 & FN2 --> FN3
+
+    subgraph DATA_QUALITY["⚠️ DATA QUALITY ISSUES IDENTIFIED"]
+        direction LR
+        DQ1["Driver name<br/>inconsistency<br/><i>Same person,<br/>different spelling</i>"]
+        DQ2["Missing receipt<br/>numbers<br/><i>Rows 106-108</i>"]
+        DQ3["Lab sample<br/>label errors<br/><i>F2, SR2 unclear</i>"]
+        DQ4["Finance data<br/>unstructured<br/><i>WhatsApp messages</i>"]
+    end
+
+    style MINE fill:#4a6741,stroke:#2d4a2d,color:#fff
+    style MINE_TRUCKING fill:#6b4c1e,stroke:#4a350f,color:#fff
+    style GRINDING fill:#5b6abf,stroke:#3d4a8a,color:#fff
+    style BUNKER_TRANSPORT fill:#4a5568,stroke:#2d3748,color:#fff
+    style FACTORY fill:#8b6914,stroke:#6b4f0a,color:#fff
+    style SAMPLING fill:#6b4c8a,stroke:#4a2d6b,color:#fff
+    style LAB fill:#8b1a4a,stroke:#6b0a3a,color:#fff
+    style FEEDBACK fill:#1a5c3a,stroke:#0d3b24,color:#fff
+    style FINANCE fill:#8b4513,stroke:#6b2f0a,color:#fff
+    style DATA_QUALITY fill:#8b0000,stroke:#5c0000,color:#fff

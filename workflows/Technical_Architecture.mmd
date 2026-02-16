@@ -1,0 +1,27 @@
+graph LR
+    subgraph INPUT["📥 Data Input"]
+        E1["Excel Files<br/>(from teams)"]
+        E2["WhatsApp Messages<br/>(finance)"]
+    end
+
+    subgraph PIPELINE["⚙️ Automated Pipeline<br/>Docker Container"]
+        P1["Python Ingestion<br/>──────────<br/>Your existing<br/>Excel→JSON scripts<br/>(enhanced)"]
+        P2["Data Validation<br/>──────────<br/>Rules engine<br/>Alert generation"]
+        P3["PostgreSQL<br/>──────────<br/>Structured storage<br/>All historical data"]
+    end
+
+    subgraph OUTPUT["📊 Reporting"]
+        O1["Automated Reports<br/>──────────<br/>Daily / Weekly / Monthly<br/>PDF or Markdown"]
+        O2["Metabase Dashboard<br/>──────────<br/>Interactive charts<br/>Manager self-service"]
+        O3["Alerts<br/>──────────<br/>Telegram/Email<br/>for anomalies"]
+    end
+
+    E1 --> P1 --> P2 --> P3
+    E2 --> P1
+    P3 --> O1
+    P3 --> O2
+    P2 --> O3
+
+    style INPUT fill:#8b6914,stroke:#6b4f0a,color:#fff
+    style PIPELINE fill:#5b6abf,stroke:#3d4a8a,color:#fff
+    style OUTPUT fill:#1a5c3a,stroke:#0d3b24,color:#fff

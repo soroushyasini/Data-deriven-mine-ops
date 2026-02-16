@@ -1,0 +1,63 @@
+graph TD
+    subgraph CURRENT["📁 CURRENT STATE<br/>3 standalone scripts"]
+        S1["excel_to_json_llm.py<br/><i>Bunker converter</i>"]
+        S2["assay_data_for_llm.py<br/><i>Lab converter</i>"]
+        S3["trucking_data_clean.py<br/><i>Trucking converter</i>"]
+    end
+
+    subgraph PROPOSED["📁 PROPOSED REPO STRUCTURE<br/>soroushyasini/Data-deriven-mine-ops"]
+        direction TB
+
+        subgraph CORE["src/core/"]
+            C1["base_converter.py<br/><i>Shared logic:<br/>• Persian number cleaning<br/>• Date normalization<br/>• Column typo fixing<br/>• Validation engine</i>"]
+        end
+
+        subgraph CONVERTERS["src/converters/"]
+            CV1["bunker_converter.py<br/><i>From excel_to_json_llm</i>"]
+            CV2["assay_converter.py<br/><i>From assay_data_for_llm</i>"]
+            CV3["trucking_converter.py<br/><i>From trucking_data_clean</i>"]
+            CV4["finance_converter.py<br/><i>NEW: payment data</i>"]
+        end
+
+        subgraph CONFIG["config/"]
+            CF1["driver_registry.json<br/><i>Canonical driver names</i>"]
+            CF2["truck_registry.json<br/><i>Truck ID registry</i>"]
+            CF3["facility_mapping.json<br/><i>A/B/C ↔ names</i>"]
+            CF4["validation_rules.json<br/><i>Alert thresholds</i>"]
+        end
+
+        subgraph REPORTS["src/reports/"]
+            R1["daily_report.py"]
+            R2["grade_report.py"]
+            R3["facility_comparison.py"]
+            R4["finance_summary.py"]
+        end
+
+        subgraph DB["src/database/"]
+            D1["models.py<br/><i>PostgreSQL schemas</i>"]
+            D2["ingestion.py<br/><i>JSON → DB loader</i>"]
+        end
+
+        subgraph DOCKER["docker/"]
+            DK1["docker-compose.yml<br/><i>PostgreSQL + Metabase<br/>+ Python pipeline</i>"]
+            DK2["Dockerfile"]
+        end
+
+        CORE --> CONVERTERS
+        CONFIG --> CONVERTERS
+        CONVERTERS --> DB
+        DB --> REPORTS
+    end
+
+    S1 -.->|"refactor"| CV1
+    S2 -.->|"refactor"| CV2
+    S3 -.->|"refactor"| CV3
+
+    style CURRENT fill:#8b4513,stroke:#6b2f0a,color:#fff
+    style PROPOSED fill:#1a5c3a,stroke:#0d3b24,color:#fff
+    style CORE fill:#2d5a8c,stroke:#1a3d5c,color:#fff
+    style CONVERTERS fill:#5b6abf,stroke:#3d4a8a,color:#fff
+    style CONFIG fill:#8b6914,stroke:#6b4f0a,color:#fff
+    style REPORTS fill:#6b4c8a,stroke:#4a2d6b,color:#fff
+    style DB fill:#8b1a4a,stroke:#6b0a3a,color:#fff
+    style DOCKER fill:#4a5568,stroke:#2d3748,color:#fff
